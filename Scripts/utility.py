@@ -9,8 +9,8 @@ def DisplayImage(image):
   #show image
   image.show()
 
-def UnPackData(data):
+def PackData(data):
   return pickle.dumps(data)
 
-def PackData(data):
+def UnPackData(data):
   return pickle.loads(data)

@@ -7,20 +7,23 @@ def server():
   
   s = socket.socket()
   s.bind((host, port))
+
+  data_received = []
   
   s.listen(1)
   client_socket, adress = s.accept()
   print("Connection from: " + str(adress))
   while True:
-    data = client_socket.recv(1024).decode('utf-8')
+    data = client_socket.recv(1024)
     if not data:
       break
     print('From online user: ')
-    DisplayImage(UnPackData(data))
-    data = data.upper()
-    client_socket.send(data.encode('utf-8'))
+    #DisplayImage(UnPackData(data))
+    data_received.append(data)
   client_socket.close()
-
+  print("Server ended execution")
+  image_unpacked = UnPackData(b"".join(data_received))
+  DisplayImage(image_unpacked)
 
 
 if __name__ == '__main__':
