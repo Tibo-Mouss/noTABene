@@ -19,4 +19,4 @@ def client():
   s.close()
 
 if __name__ == '__main__':
-  client()
+  asyncio.run(tcp_echo_client('Hello World!'))

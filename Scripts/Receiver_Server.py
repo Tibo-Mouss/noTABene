@@ -27,4 +27,4 @@ def server():
 
 
 if __name__ == '__main__':
-  server()
+  asyncio.run(main())
