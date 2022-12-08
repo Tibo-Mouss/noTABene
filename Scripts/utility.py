@@ -20,7 +20,7 @@ def UnPackData(data):
 import asyncio
 
 async def tcp_echo_client(message):
-  reader, writer = await asyncio.open_connection('127.0.0.1', 8888)
+  reader, writer = await asyncio.open_connection('192.168.0.1', 8888)
 
   print(f'Send: {message!r}')
   writer.write(message.encode())
@@ -50,7 +50,7 @@ async def handle_echo(reader, writer):
   writer.close()
 
 async def main():
-  server = await asyncio.start_server(handle_echo, '127.0.0.1', 8888)
+  server = await asyncio.start_server(handle_echo, '192.168.0.1', 8888)
 
   addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
   print(f'Serving on {addrs}')
