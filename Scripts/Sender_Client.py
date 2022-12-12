@@ -8,7 +8,7 @@ def client():
   s = socket.socket()
   s.connect((host, port))
 
-  img = Image.open("/home/groupeiot/noTABene/Scripts/test_img.png")
+  img = Image.open("D:/Documents/GitHub/noTABene/Scripts/test_img.png")
   
   message = input('-> ')
   while message != 'q':
@@ -19,4 +19,5 @@ def client():
   s.close()
 
 if __name__ == '__main__':
-  asyncio.run(tcp_echo_client('Hello World!'))
+  img = Image.open("D:/Documents/GitHub/noTABene/Scripts/test_img.png")
+  asyncio.run(tcp_echo_client(img))

@@ -1,6 +1,8 @@
 
 from PIL import Image
 import pickle
+import base64
+
 
 
 def DisplayImage(image):
@@ -19,11 +21,12 @@ def UnPackData(data):
 
 import asyncio
 
-async def tcp_echo_client(message):
+async def tcp_echo_client(image):
   reader, writer = await asyncio.open_connection('127.0.0.1', 8888)
 
-  print(f'Send: {message!r}')
-  writer.write(message.encode())
+  #print(f'Send: {message!r}')
+  encoded_string = base64.b64encode(image.read())
+  writer.write(encoded_string.encode())
   await writer.drain()
 
   data = await reader.read(100)
@@ -40,7 +43,11 @@ async def handle_echo(reader, writer):
   message = data.decode()
   addr = writer.get_extra_info('peername')
 
-  print(f"Received {message!r} from {addr!r}")
+  #print(f"Received {message!r} from {addr!r}")
+  print ("message : " + message)
+  with open("imageToSave.png", "wb") as fh:
+    fh.write(base64.decodebytes(message))
+  DisplayImage(message)
 
   print(f"Send: {message!r}")
   writer.write(data)
