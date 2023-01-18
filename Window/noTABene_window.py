@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QTimer
 
 
 class Ui_MainWindow(object):
@@ -46,6 +47,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        # Conectique du timer de la tab Série
+        self.timer_du_timer = QTimer()
+        self.timer_du_timer.timeout.connect(self.Print_Hello)
+        self.timer_du_timer.start(1000)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "NoTABene"))
@@ -54,6 +60,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Image_tab), _translate("MainWindow", "Image"))
 
 
+    def Print_Hello(self):
+        self.TranscriptionBox.setText("Hello")
+    
+    
 
 if __name__ == "__main__":
     import sys
