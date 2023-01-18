@@ -15,7 +15,12 @@ id = random.randint(0, 10)
 print(str(id))
 
 while True:
-    data, addr = sock.recvfrom(1024)
+    # data, addr = sock.recvfrom(1024)
+    # Réception des données en provenance de la Raspberry Pi (ici, une image ou une vidéo)
+    data = b''
+    packet = sock.recv(4096)
+    data+= packet
+
     with open("Images\ImageReceivedMulticast" + str(id) + ".png","wb") as f:
         f.write(data)
     print("Received Image Lets gooo")

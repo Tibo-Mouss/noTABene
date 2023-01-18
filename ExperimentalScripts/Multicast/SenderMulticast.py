@@ -12,6 +12,8 @@ def Send_Image():
     image_data = image_file.read()
     sock.sendto(image_data, (MCAST_GRP, MCAST_PORT))
 
+    print("Image sent !")
+
 
 def Say_Hello():
     print("hi")
