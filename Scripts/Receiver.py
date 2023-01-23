@@ -1,19 +1,32 @@
 import socket
 
-def client():
-  host = socket.gethostname()  # get local machine name
-  port = 8080  # Make sure it's within the > 1024 $$ <65535 range
-  
-  s = socket.socket()
-  s.connect((host, port))
-  
-  message = input('-> ')
-  while message != 'q':
-    s.send(message.encode('utf-8'))
-    data = s.recv(1024).decode('utf-8')
-    print('Received from server: ' + data)
-    message = input('==> ')
-  s.close()
+# Créer un socket TCP/IP
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-if __name__ == '__main__':
-  client()
+# Connecter le socket à l'adresse IP et au numéro de port de la Raspberry Pi
+server_address = ('localhost', 10000)
+print('connecting to {} port {}'.format(*server_address))
+sock.connect(server_address)
+
+try:
+
+    # # Envoyer des données vers la Raspberry Pi (ici, une image ou une vidéo)
+    # image_file = open("image.jpg", "rb")
+    # image_data = image_file.read()
+    # sock.sendall(image_data)
+
+    # Réception des données en provenance de la Raspberry Pi (ici, une image ou une vidéo)
+    data = b''
+    while True:
+        packet = sock.recv(4096)
+        if not packet:
+            break
+        data+= packet
+
+    print('received {!r}'.format(data))
+    with open("received_image.png", "wb") as f:
+        f.write(data)
+
+finally:
+    print('closing socket')
+    sock.close()

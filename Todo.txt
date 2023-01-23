@@ -1,0 +1,2 @@
+truc à analyser / tester
+https://www.bytewax.io/blog/data-stream-server-sent-events/
