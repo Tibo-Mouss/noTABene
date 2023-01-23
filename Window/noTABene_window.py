@@ -79,9 +79,10 @@ class Ui_MainWindow(object):
     def Print_Hello(self):
         self.TranscriptionBox.setText("Hello")
 
-    def Display_Status(self, message):
+    def Display_Status(self, message, Disappear):
         self.Communication_status.setText(message)
-        QtCore.QTimer.singleShot(2000, self.Empty_Status)
+        if (Disappear):
+            QtCore.QTimer.singleShot(2000, self.Empty_Status)
     
     def Empty_Status(self):
         self.Communication_status.setText("")
@@ -116,24 +117,29 @@ def SetupCommunication():
     sock.bind(('', MCAST_PORT)) 
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-    # sock.settimeout(10)
+    sock.settimeout(10)
     return sock
 
 
 def Receive_data(WindowUI, sock, stop_flag):
     print("started background task")
     while not stop_flag[0]:
-        data = b''
-        packet = sock.recv(4096)
-        data += packet
+        try:
+            packet = sock.recv(4096)
+        except:
+            WindowUI.Display_Status("Connection lost", False)
+        else:
+            data = b'' + packet
 
-        path = "Images\ImageReceivedMulticast.png"
-        with open(path,"wb") as f:
-            f.write(data)
+            path = "Images\ImageReceivedMulticast.png"
+            with open(path,"wb") as f:
+                f.write(data)
+                f.close()
 
-        WindowUI.Display_Status("Image Received !")
+            WindowUI.Display_Status("Image Received !", True)           
+            WindowUI.Display_Image(path)
 
-        print("Image received !")
+            print("Image received !")
     print("Background task ended")
 
 
@@ -150,11 +156,11 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
 
+    #Fait en sorte que la task en background se fasse tej quand on close la window
     app.setQuitOnLastWindowClosed(False)
     app.lastWindowClosed.connect(ui.FinishBackgroundTasks)
 
     future = ui.setupUi(MainWindow)
     MainWindow.show()
-    ui.Display_Image("Images\ImageReceivedMulticast.png")
     sys.exit(app.exec_())
     print("test ok")
